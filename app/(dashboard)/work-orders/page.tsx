@@ -50,7 +50,7 @@ export default function WorkOrdersPage() {
     ? orders
     : orders.filter((o) => {
         if (activeTab === "new") return isStatus(o.status, "New")
-        if (activeTab === "producing") return isStatus(o.status, "Producing")
+        if (activeTab === "producing") return isStatus(o.status, "InProgress")
         if (activeTab === "completed") return isStatus(o.status, "Completed")
         return true
       })
@@ -58,7 +58,7 @@ export default function WorkOrdersPage() {
   const counts = {
     all: orders.length,
     new: orders.filter((o) => isStatus(o.status, "New")).length,
-    producing: orders.filter((o) => isStatus(o.status, "Producing")).length,
+    producing: orders.filter((o) => isStatus(o.status, "InProgress")).length,
     completed: orders.filter((o) => isStatus(o.status, "Completed")).length,
   }
 
