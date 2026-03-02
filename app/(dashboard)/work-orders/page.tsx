@@ -24,7 +24,7 @@ function isStatus(status: string | null, match: string) {
 }
 
 export default function WorkOrdersPage() {
-  const [orders, setOrders] = useState<WorkOrderDto[]>(initialOrders)
+  const [orders, setOrders] = useState<WorkOrderDto[]>([])
   const [activeTab, setActiveTab] = useState("all")
 
   const fetchOrders = useCallback(async () => {

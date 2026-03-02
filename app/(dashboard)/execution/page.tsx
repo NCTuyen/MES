@@ -80,7 +80,7 @@ export default function ExecutionPage() {
   const [scanning, setScanning] = useState(false)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [scannedMaterials, setScannedMaterials] = useState<MaterialInputDto[]>([])
-  const [hourlyData, setHourlyData] = useState(mockHourlyData)
+  const [hourlyData, setHourlyData] = useState<any[]>(mockHourlyData)
   const [apiStatus, setApiStatus] = useState<"live" | "mock">("mock")
 
   const activeOrders = orders.filter(
