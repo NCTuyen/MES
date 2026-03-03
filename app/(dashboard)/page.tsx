@@ -1,10 +1,10 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { KPICards } from "@/components/dashboard/kpi-cards"
 import { ProductionChart } from "@/components/dashboard/production-chart"
 import { RecentOrders } from "@/components/dashboard/recent-orders"
-import { getHourlyProduction, type WorkOrderDto, type HourlyProductionDto } from "@/lib/api"
+import { getHourlyProduction, type WorkOrderDto, type HourlyProductionDto, getWorkOrders } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 
 // Mock work orders (no GET /workorders endpoint in API)
@@ -32,7 +32,6 @@ const mockHourlyData = [
 ]
 
 export default function DashboardPage() {
-  const [orders] = useState<WorkOrderDto[]>(mockOrders)
   const [hourlyData, setHourlyData] = useState(mockHourlyData)
   const [loading, setLoading] = useState(true)
   const [apiStatus, setApiStatus] = useState<"loading" | "live" | "mock">("loading")
@@ -63,7 +62,24 @@ export default function DashboardPage() {
     fetchHourly()
   }, [])
 
-  const activeOrders = orders.filter((o) => o.status === "Producing").length
+  const [orders, setOrders] = useState<WorkOrderDto[]>([])
+
+  const fetchOrders = useCallback(async () => {
+    try {
+      const res = await getWorkOrders()
+      if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+        setOrders(res.data)
+      }
+    } catch (err) {
+      console.error("Failed to fetch work orders", err)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchOrders()
+  }, [fetchOrders])
+
+  const activeOrders = orders.filter((o) => o.status === "InProgress").length
   const totalOutput = hourlyData.reduce((sum, h) => sum + h.output, 0)
   const totalTarget = hourlyData.reduce((sum, h) => sum + h.target, 0)
   const efficiency = totalTarget > 0 ? Math.round((totalOutput / totalTarget) * 100) : 0

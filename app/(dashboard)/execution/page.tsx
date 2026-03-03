@@ -38,6 +38,7 @@ import {
   type WorkOrderDto,
   type MaterialInputDto,
   type HourlyProductionDto,
+  getWorkOrders,
 } from "@/lib/api"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
@@ -73,7 +74,7 @@ const mockHourlyData = [
 ]
 
 export default function ExecutionPage() {
-  const [orders, setOrders] = useState<WorkOrderDto[]>(mockOrders)
+  const [orders, setOrders] = useState<WorkOrderDto[]>([])
   const [selectedWO, setSelectedWO] = useState<string>("")
   const [materialCode, setMaterialCode] = useState("")
   const [lotNumber, setLotNumber] = useState("")
@@ -84,7 +85,7 @@ export default function ExecutionPage() {
   const [apiStatus, setApiStatus] = useState<"live" | "mock">("mock")
 
   const activeOrders = orders.filter(
-    (o) => o.status === "New" || o.status === "Producing"
+    (o) => o.status === "New" || o.status === "InProgress"
   )
   const currentOrder = orders.find((o) => o.workOrderId.toString() === selectedWO)
 
@@ -226,6 +227,21 @@ export default function ExecutionPage() {
     setLotNumber("")
     setScanning(false)
   }
+
+  const fetchOrders = useCallback(async () => {
+    try {
+      const res = await getWorkOrders()
+      if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+        setOrders(res.data)
+      }
+    } catch (err) {
+      console.error("Failed to fetch work orders", err)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchOrders()
+  }, [fetchOrders])
 
   const totalGood = hourlyData.reduce((sum, h) => sum + h.goodQty, 0)
   const totalScrap = hourlyData.reduce((sum, h) => sum + h.scrapQty, 0)
