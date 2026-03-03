@@ -57,18 +57,6 @@ const chartConfig = {
 
 // Mock WO data (no GET /workorders in API)
 
-const mockHourlyData = [
-  { hour: "06:00", goodQty: 120, scrapQty: 3, eventCount: 2 },
-  { hour: "07:00", goodQty: 145, scrapQty: 1, eventCount: 1 },
-  { hour: "08:00", goodQty: 160, scrapQty: 2, eventCount: 0 },
-  { hour: "09:00", goodQty: 138, scrapQty: 4, eventCount: 1 },
-  { hour: "10:00", goodQty: 155, scrapQty: 0, eventCount: 0 },
-  { hour: "11:00", goodQty: 142, scrapQty: 2, eventCount: 1 },
-  { hour: "12:00", goodQty: 80, scrapQty: 1, eventCount: 3 },
-  { hour: "13:00", goodQty: 148, scrapQty: 1, eventCount: 0 },
-  { hour: "14:00", goodQty: 165, scrapQty: 0, eventCount: 0 },
-]
-
 export default function ExecutionPage() {
   const [orders, setOrders] = useState<WorkOrderDto[]>([])
   const [selectedWO, setSelectedWO] = useState<string>("")
@@ -77,7 +65,7 @@ export default function ExecutionPage() {
   const [scanning, setScanning] = useState(false)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [scannedMaterials, setScannedMaterials] = useState<MaterialInputDto[]>([])
-  const [hourlyData, setHourlyData] = useState<any[]>(mockHourlyData)
+  const [hourlyData, setHourlyData] = useState<any[]>([])
   const [apiStatus, setApiStatus] = useState<"live" | "mock">("mock")
   const [goodQty, setGoodQty] = useState("")
   const [scrapQty, setScrapQty] = useState("")
@@ -96,11 +84,11 @@ export default function ExecutionPage() {
         setHourlyData(res.data)
         setApiStatus("live")
       } else {
-        setHourlyData(mockHourlyData)
+        setHourlyData([])
         setApiStatus("mock")
       }
     } catch {
-      setHourlyData(mockHourlyData)
+      setHourlyData([])
       setApiStatus("mock")
     }
   }, [])
