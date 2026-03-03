@@ -55,11 +55,6 @@ const chartConfig = {
 } satisfies ChartConfig
 
 // Mock WO data (no GET /workorders in API)
-const mockOrders: WorkOrderDto[] = [
-  { workOrderId: 1, woNumber: "WO-001", productCode: "SP-A100", productName: "Thanh nhom A100", lineCode: "L1", lineName: "Chuyen 1", shiftName: "Ca 1", plannedQty: 500, actualQty: 320, scrapQty: 5, status: "Producing", plannedStartAt: null, plannedEndAt: null, actualStartAt: "2026-03-02T06:00:00Z", actualEndAt: null, remark: null, createdAt: "2026-03-02T06:00:00Z" },
-  { workOrderId: 2, woNumber: "WO-002", productCode: "SP-B200", productName: "Oc vit B200", lineCode: "L2", lineName: "Chuyen 2", shiftName: "Ca 1", plannedQty: 300, actualQty: 0, scrapQty: 0, status: "New", plannedStartAt: null, plannedEndAt: null, actualStartAt: null, actualEndAt: null, remark: null, createdAt: "2026-03-02T07:00:00Z" },
-  { workOrderId: 4, woNumber: "WO-004", productCode: "SP-D300", productName: "Bu lon D300", lineCode: "L3", lineName: "Chuyen 3", shiftName: "Ca 1", plannedQty: 200, actualQty: 85, scrapQty: 2, status: "Producing", plannedStartAt: null, plannedEndAt: null, actualStartAt: "2026-03-02T08:00:00Z", actualEndAt: null, remark: null, createdAt: "2026-03-02T08:00:00Z" },
-]
 
 const mockHourlyData = [
   { hour: "06:00", goodQty: 120, scrapQty: 3, eventCount: 2 },
@@ -192,9 +187,10 @@ export default function ExecutionPage() {
       const res = await scanMaterial({
         workOrderId: currentOrder.workOrderId,
         materialCode: materialCode,
+        materialName: 'Name of ' + materialCode,
         lotNumber: lotNumber || undefined,
         actualQty: 1,
-        plannedQty: 1,
+        plannedQty: currentOrder?.plannedQty || 1,
         unit: "pc",
         inputBy: "operator",
       })
