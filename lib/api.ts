@@ -197,6 +197,21 @@ export function getHourlyProduction(woid: number) {
   return apiFetch<ApiResponse<HourlyProductionDto[]>>(`/production/hourly?woid=${woid}`)
 }
 
+// POST /production/record - Record production quantity
+export interface RecordProductionRequest {
+  workOrderId: number
+  goodQty: number
+  scrapQty: number
+  operator: string
+}
+
+export function recordProduction(data: RecordProductionRequest) {
+  return apiFetch<ApiResponse<any>>("/production/record", {
+    method: "POST",
+    body: JSON.stringify(data),
+  })
+}
+
 // GET /trace?product_code=<code> - Trace product
 export function traceProduct(productCode: string) {
   return apiFetch<ApiResponse<ProductTraceDto>>(`/trace?product_code=${encodeURIComponent(productCode)}`)

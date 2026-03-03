@@ -35,6 +35,7 @@ import {
   completeWorkOrder,
   scanMaterial,
   getHourlyProduction,
+  recordProduction,
   type WorkOrderDto,
   type MaterialInputDto,
   type HourlyProductionDto,
@@ -78,6 +79,9 @@ export default function ExecutionPage() {
   const [scannedMaterials, setScannedMaterials] = useState<MaterialInputDto[]>([])
   const [hourlyData, setHourlyData] = useState<any[]>(mockHourlyData)
   const [apiStatus, setApiStatus] = useState<"live" | "mock">("mock")
+  const [goodQty, setGoodQty] = useState("")
+  const [scrapQty, setScrapQty] = useState("")
+  const [recording, setRecording] = useState(false)
 
   const activeOrders = orders.filter(
     (o) => o.status === "New" || o.status === "InProgress"
@@ -222,6 +226,48 @@ export default function ExecutionPage() {
     setMaterialCode("")
     setLotNumber("")
     setScanning(false)
+  }
+
+  // POST /production/record
+  async function handleRecordProduction() {
+    if (!selectedWO || !currentOrder) return
+    const goodQtyNum = goodQty === "" ? 0 : parseFloat(goodQty)
+    const scrapQtyNum = scrapQty === "" ? 0 : parseFloat(scrapQty)
+    
+    if (isNaN(goodQtyNum) || isNaN(scrapQtyNum) || goodQtyNum < 0 || scrapQtyNum < 0) {
+      toast.error("Vui long nhap so luong hop le (>= 0)")
+      return
+    }
+
+    if (goodQtyNum === 0 && scrapQtyNum === 0) {
+      toast.error("Vui long nhap it nhat mot so luong")
+      return
+    }
+
+    setRecording(true)
+    try {
+      const res = await recordProduction({
+        workOrderId: currentOrder.workOrderId,
+        goodQty: goodQtyNum,
+        scrapQty: scrapQtyNum,
+        operator: "To truong",
+      })
+      if (res.success) {
+        toast.success("Da ghi nhan san luong thanh cong!")
+        setGoodQty("")
+        setScrapQty("")
+        // Refresh hourly data after recording
+        if (selectedWO) {
+          fetchHourly(parseInt(selectedWO))
+        }
+      } else {
+        toast.error(res.message || "Ghi nhan san luong that bai")
+      }
+    } catch (err) {
+      toast.error(`API loi: ${err instanceof Error ? err.message : ""}`)
+    } finally {
+      setRecording(false)
+    }
   }
 
   const fetchOrders = useCallback(async () => {
@@ -442,6 +488,61 @@ export default function ExecutionPage() {
                       </div>
                     ))
                   )}
+                </div>
+
+                {/* Ghi nhận sản lượng */}
+                <div className="flex flex-col gap-3 pt-2 border-t border-border/50">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground font-medium px-1">
+                    <span>Ghi nhan san luong</span>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="flex-1">
+                      <Label htmlFor="goodQty" className="text-xs text-muted-foreground mb-1 block">
+                        San luong tot
+                      </Label>
+                      <Input
+                        id="goodQty"
+                        type="number"
+                        placeholder="0"
+                        value={goodQty}
+                        onChange={(e) => setGoodQty(e.target.value)}
+                        className="h-12 text-base font-mono"
+                        min="0"
+                        step="1"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <Label htmlFor="scrapQty" className="text-xs text-muted-foreground mb-1 block">
+                        Phe pham
+                      </Label>
+                      <Input
+                        id="scrapQty"
+                        type="number"
+                        placeholder="0"
+                        value={scrapQty}
+                        onChange={(e) => setScrapQty(e.target.value)}
+                        className="h-12 text-base font-mono"
+                        min="0"
+                        step="1"
+                      />
+                    </div>
+                    <div className="flex items-end">
+                      <Button
+                        type="button"
+                        size="lg"
+                        className="h-12 gap-2 px-6"
+                        disabled={(!goodQty && !scrapQty) || recording || !selectedWO}
+                        onClick={handleRecordProduction}
+                      >
+                        {recording ? (
+                          <Loader2 className="size-4 animate-spin" />
+                        ) : (
+                          <Target className="size-4" />
+                        )}
+                        Ghi nhan
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </>
             )}
