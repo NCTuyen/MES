@@ -193,8 +193,8 @@ export function scanMaterial(data: ScanMaterialRequest) {
 }
 
 // GET /production/hourly?woid=<id> - Get hourly production data
-export function getHourlyProduction(woid: number) {
-  return apiFetch<ApiResponse<HourlyProductionDto[]>>(`/production/hourly?woid=${woid}`)
+export function getHourlyProduction(woid?: number) {
+  return apiFetch<ApiResponse<HourlyProductionDto[]>>(`/production/hourly${woid ? `?woid=${woid}` : ""}`)
 }
 
 // POST /production/record - Record production quantity

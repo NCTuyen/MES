@@ -40,7 +40,7 @@ export default function DashboardPage() {
     async function fetchHourly() {
       try {
         // Try fetching hourly production for WO 1 from the real API
-        const res = await getHourlyProduction(1)
+        const res = await getHourlyProduction()
         if (res.success && res.data && res.data.length > 0) {
           setHourlyData(
             res.data.map((d: HourlyProductionDto) => ({
