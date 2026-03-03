@@ -126,7 +126,7 @@ export default function ExecutionPage() {
         setOrders((prev) =>
           prev.map((o) =>
             o.workOrderId.toString() === selectedWO
-              ? { ...o, status: "Producing", actualStartAt: new Date().toISOString() }
+              ? { ...o, status: "InProgress", actualStartAt: new Date().toISOString() }
               : o
           )
         )
@@ -138,7 +138,7 @@ export default function ExecutionPage() {
       setOrders((prev) =>
         prev.map((o) =>
           o.workOrderId.toString() === selectedWO
-            ? { ...o, status: "Producing", actualStartAt: new Date().toISOString() }
+            ? { ...o, status: "InProgress", actualStartAt: new Date().toISOString() }
             : o
         )
       )
@@ -313,12 +313,12 @@ export default function ExecutionPage() {
                     variant="secondary"
                     className={cn(
                       "text-xs",
-                      currentOrder.status === "Producing"
+                      currentOrder.status === "InProgress"
                         ? "bg-chart-1/15 text-chart-1 border-chart-1/30"
                         : "bg-chart-3/15 text-chart-3 border-chart-3/30"
                     )}
                   >
-                    {currentOrder.status === "Producing" ? "Dang SX" : "Moi"}
+                    {currentOrder.status === "InProgress" ? "Dang SX" : "Moi"}
                   </Badge>
                 </div>
               </div>
@@ -329,7 +329,7 @@ export default function ExecutionPage() {
               <Button
                 size="lg"
                 className="h-16 text-lg gap-2 bg-chart-1 hover:bg-chart-1/90 text-primary-foreground"
-                disabled={!selectedWO || currentOrder?.status === "Producing" || actionLoading !== null}
+                disabled={!selectedWO || currentOrder?.status === "InProgress" || actionLoading !== null}
                 onClick={handleStart}
               >
                 {actionLoading === "start" ? (
@@ -342,7 +342,7 @@ export default function ExecutionPage() {
               <Button
                 size="lg"
                 className="h-16 text-lg gap-2 bg-success hover:bg-success/90 text-success-foreground"
-                disabled={!selectedWO || currentOrder?.status !== "Producing" || actionLoading !== null}
+                disabled={!selectedWO || currentOrder?.status !== "InProgress" || actionLoading !== null}
                 onClick={handleComplete}
               >
                 {actionLoading === "complete" ? (

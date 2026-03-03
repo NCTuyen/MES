@@ -33,7 +33,7 @@ const mockTraceData: ProductTraceDto = {
     {
       workOrderId: 1,
       woNumber: "WO-001",
-      status: "Producing",
+      status: "InProgress",
       lineCode: "L1",
       lineName: "Chuyen 1",
       shiftName: "Ca 1",
@@ -129,7 +129,7 @@ function WOTraceCard({ wo }: { wo: WorkOrderTraceDto }) {
           <Badge className={
             wo.status === "Completed"
               ? "bg-success/15 text-success border-success/30"
-              : wo.status === "Producing"
+              : wo.status === "InProgress"
                 ? "bg-chart-1/15 text-chart-1 border-chart-1/30"
                 : "bg-chart-3/15 text-chart-3 border-chart-3/30"
           }>

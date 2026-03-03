@@ -17,7 +17,7 @@ function getStatusColor(status: string | null) {
     case "New":
     case "Mới":
       return "bg-chart-3/15 text-chart-3 border-chart-3/30"
-    case "Producing":
+    case "InProgress":
     case "Đang sản xuất":
       return "bg-chart-1/15 text-chart-1 border-chart-1/30"
     case "Completed":
@@ -31,7 +31,7 @@ function getStatusColor(status: string | null) {
 function getStatusLabel(status: string | null) {
   switch (status) {
     case "New": return "Moi"
-    case "Producing": return "Dang SX"
+    case "InProgress": return "Dang SX"
     case "Completed": return "Hoan thanh"
     default: return status || "N/A"
   }
