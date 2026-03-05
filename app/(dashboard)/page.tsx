@@ -6,6 +6,8 @@ import { ProductionChart } from "@/components/dashboard/production-chart"
 import { RecentOrders } from "@/components/dashboard/recent-orders"
 import { getHourlyProduction, type WorkOrderDto, type HourlyProductionDto, getWorkOrders } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Info } from "lucide-react"
 
 // Mock work orders (no GET /workorders endpoint in API)
 const mockOrders: WorkOrderDto[] = [
@@ -91,6 +93,12 @@ export default function DashboardPage() {
           <Skeleton className="h-8 w-48 mb-2" />
           <Skeleton className="h-4 w-80" />
         </div>
+        <Alert className="bg-chart-3/10 border-chart-3/30">
+          <Info className="size-4 text-chart-3" />
+          <AlertDescription className="text-sm">
+            Do web dang su dung server free nen lan dau connect can mat 25-30s, xin vui long cho trong giay lat
+          </AlertDescription>
+        </Alert>
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {[...Array(4)].map((_, i) => (
             <Skeleton key={i} className="h-32" />
