@@ -96,7 +96,7 @@ export default function DashboardPage() {
         <Alert className="bg-chart-3/10 border-chart-3/30">
           <Info className="size-4 text-chart-3" />
           <AlertDescription className="text-sm">
-            Do web dang su dung server free nen lan dau connect can mat 25-30s, xin vui long cho trong giay lat
+            Do web đang sử dụng server free nên lần đầu connect cần mất 25-30s, xin vui lòng chờ trong giây lát
           </AlertDescription>
         </Alert>
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
